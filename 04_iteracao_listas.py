@@ -26,3 +26,4 @@ for i in range(len(frutas)-1, -1, -1):
     print(f"Posição {i} => {frutas[i]}")
 
 print("-" * 80)        
+teste
