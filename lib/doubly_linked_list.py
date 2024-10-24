@@ -21,7 +21,7 @@ class DoublyLinkedList:
         encadeada
         """
         prev: int | None = None
-        data: any   # Qualquer tipo de dado
+        data: any = None   # Qualquer tipo de dado
         next: int | None = None
     #------------------------------------------------------------------------------
 
@@ -113,3 +113,51 @@ class DoublyLinkedList:
             current.prev = new  
 
         self.__count += 1    
+
+    def remove(self, pos):
+        """
+        Método que remove um nodo da lista, dada sua posição
+        """    
+        # 1° caso: lista vazia ou posição fora dos limites
+        if self.__count == 0 or pos < 0 or pos >= self.__count:
+            raise Exception("ERRO: posição inválida para remoção.")
+        
+        # 2° caso: remoção do início da lista
+        if pos == 0:
+            # Vamos remover o nodo apontado por __head
+            being_removed = self.__head
+            # O novo __head passa a ser o sucessor do nodo removido
+            self.__head = being_removed.next
+            # Se o novo __head for um nodo válido, ele não pode ter
+            # um antecessor
+            if self.__head is not None: self.__head.prev = None
+            # SITUAÇÃO ESPECIAL: no caso de remoção do único nodo
+            # restante da lista, __tail também precisa passar a 
+            # valer None
+            if self.__count == 1: self.__tail = None
+
+        self.__count -= 1    
+
+    def __str__(self):
+        """
+        Método que gera a representação em string da lista
+        duplamente encadeada
+        """    
+        if self.__count == 0: return "[*** LISTA VAZIA ***]\n\n"
+
+        repr = f"*** LISTANDO {self.__count} ITEM(NS) ***\n"
+        repr += f"Endereço do __head: {hex(id(self.__head))}\n"
+        repr += f"Endereço do __tail: {hex(id(self.__tail))}\n"
+        repr += ("=" * 80) + "\n"
+
+        node = self.__head
+        for pos in range(self.__count):
+            repr += f"NODO posição {pos}, endereço {hex(id(node))}\n"
+            repr += f"     Endereço do usuário anterior: {hex(id(node.prev))}\n"
+            repr += f"     DADO DO USUÁRIO: {node.data}\n"
+            repr += f"     Endereço do nodo seguinte: {hex(id(node.next))}\n"
+            repr += ("=" * 80) + "\n"
+            node = node.next
+
+        repr += ("=" * 80) + "\n\n"
+        return repr    
