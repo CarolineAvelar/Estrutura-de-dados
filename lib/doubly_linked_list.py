@@ -114,6 +114,16 @@ class DoublyLinkedList:
 
         self.__count += 1    
 
+    def append(self, val):
+        """
+        Método de atalho para inserir um valor na última posição
+        """
+        self.insert(self.__count, val)
+
+    def count(self):
+        """ Método que retorna o número de itens na lista"""
+        return self.__count    
+
     def remove(self, pos):
         """
         Método que remove um nodo da lista, dada sua posição
@@ -136,7 +146,53 @@ class DoublyLinkedList:
             # valer None
             if self.__count == 1: self.__tail = None
 
-        self.__count -= 1    
+        # 3° caso: remoção do final da lista
+        elif pos == self.__count -1:
+            # Vamos remover o nodo apontado por __tail
+            being_removed = self.__tail
+            # O novo __tail passa a ser o antecessor do removido
+            self.__tail = being_removed.prev
+            # Se o novo __tail for um nodo válido, não pode ter sucessor
+            if self.__tail is not None: self.__tail.next = None
+            # SITUAÇÃO ESPECIAL: em caso de remoção do único nodo
+            # restante da lista, __head também precisa passar a valer
+            # None
+            if self.__count == 1: self.__head = None
+
+        # 4° caso: remoção de posição intermediária
+        else:
+            # Pedimos a __find_node() para localizar o nodo a ser removido
+            being_removed = self.__find_node(pos)
+            # Nodo anterior ao que está sendo removido
+            before = being_removed.prev
+            # Nodo seguinte ao que está sendo removido
+            after = being_removed.next
+            # O nodo anterior passa a apontar, à frente para o nodo posterior
+            before.next = after
+            # O nodo seguinte passa a apontar, para trás, para o nodo anterior
+            after.prev = before
+        self.__count -= 1   
+
+    def pop(self):
+        """ Método de atalho para remover o último item da lista """     
+        return self.remove(self.__count - 1)
+
+    def peek(self, pos):
+        """ Método que retorna o valor do nodo na posição especificada,
+            sem remover o nodo da lista
+        """
+        # Se a posição passada for negativa, calculamos a posição real
+        # subtraindo se self.__count
+        if pos < 0: pos = self.__count +  pos
+
+        # Se a lista estiver vazia ou a posição estiver inválida, lançamos
+        # uma exceção e terminamos
+        if self.__count == 0 or pos < 0 or pos >= self.__count:
+            raise Exception("ERRO: posição inválida para remoção.")
+
+        # Busca o nodo para consultar o valor
+        node = self.__find_node(pos)
+        return node.data
 
     def __str__(self):
         """
