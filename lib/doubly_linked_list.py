@@ -171,7 +171,10 @@ class DoublyLinkedList:
             before.next = after
             # O nodo seguinte passa a apontar, para trás, para o nodo anterior
             after.prev = before
+            
         self.__count -= 1   
+
+        return being_removed.data
 
     def pop(self):
         """ Método de atalho para remover o último item da lista """     
